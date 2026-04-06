@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberKeys | The Future of Typing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0f0f12;
+            --border: #1a1a1e;
+            --primary: #00ff88;
+            --secondary: #00a36c;
+            --white: #ffffff;
+            --muted: #52525b;
+            --body-text: #a1a1aa;
+            --gradient: linear-gradient(90deg, #00ff88, #00a36c);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--bg);
+            color: var(--white);
+        }
+
+        body {
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Navbar */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 900;
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-size: 1.2rem;
+        }
+
+        .logo span:last-child {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            background: var(--gradient);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 5%;
+            overflow: hidden;
+        }
+
+        .starfield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at center, #111118 0%, #0a0a0f 100%);
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .orb-primary { background: var(--primary); top: -10%; left: -10%; }
+        .orb-secondary { background: var(--secondary); bottom: -10%; right: -10%; }
+
+        .tagline {
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .hero p {
+            max-width: 600px;
+            color: var(--body-text);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--bg);
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Scroll Video Section */
+        #scroll-animation-section {
+            position: relative;
+            height: 300vh;
+            background: var(--bg);
+            padding: 0;
+        }
+
+        .video-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .video-frame {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 60px rgba(0, 255, 136, 0.12);
+            transform: scale(0.5);
+            border-radius: 24px;
+            opacity: 0;
+            will-change: transform, opacity, border-radius;
+        }
+
+        .video-frame video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3rem 5%;
+            background: linear-gradient(to top, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.4) 50%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .video-overlay h2 {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+
+        .video-overlay p {
+            color: var(--body-text);
+            max-width: 600px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .video-glow-left {
+            position: absolute;
+            top: 25%;
+            left: 2%;
+            width: 150px;
+            height: 150px;
+            background: var(--primary);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        .video-glow-right {
+            position: absolute;
+            bottom: 25%;
+            right: 2%;
+            width: 180px;
+            height: 180px;
+            background: #6c63ff;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            animation: pulse-glow 4s ease-in-out infinite 1s;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.15); }
+        }
+
+        /* Sections General */
+        section {
+            padding: 8rem 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--body-text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Features Teaser */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--body-text);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .cta-link {
+            display: block;
+            text-align: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .cta-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Product Showcase */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .badge-primary { background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        .badge-secondary { background: rgba(0, 163, 108, 0.1); color: var(--secondary); border: 1px solid var(--secondary); }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a25, #252535);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-img img {
+            transform: scale(1.05);
+        }
+
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .buy-btn {
+            display: inline-block;
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .buy-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient);
+        }
+
+        .user-details h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-details p {
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        .stars {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .quote {
+            font-style: italic;
+            color: var(--body-text);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: #080810;
+            padding: 5rem 5% 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-logo {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-nav {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            min-width: 300px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-col ul li a {
+            text-decoration: none;
+            color: var(--muted);
+            transition: color 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary);
+        }
+
+        .footer-social {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.5rem;
+            min-width: 200px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .social-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta { display: none; }
+            .hero h1 { font-size: 3.5rem; }
+            .footer-nav { justify-content: flex-start; gap: 2rem; }
+            .footer-social { justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">C</div>
+            CYBER<span>KEYS</span>
+        </a>
+        <div class="nav-links">
+            <a href="features.html">Features</a>
+            <a href="builder.html">Builder</a>
+            <a href="rgb.html">RGB</a>
+            <a href="community.html">Community</a>
+        </div>
+        <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+    </nav>
+
+    <header class="hero">
+        <div class="starfield" id="starfield"></div>
+        <div class="orb orb-primary"></div>
+        <div class="orb orb-secondary"></div>
+        
+        <div class="tagline">● THE FUTURE OF TYPING</div>
+        <h1>ASSEMBLE<br><span class="gradient-text">PERFECTION.</span></h1>
+        <p>Experience the ultimate fusion of cyber-minimalist design and uncompromising performance. Build the keyboard that redefines your reality.</p>
+        
+        <div class="hero-btns">
+            <a href="builder.html" class="btn-primary">Start Building</a>
+            <a href="#scroll-animation-section" class="btn-secondary">Watch Trailer</a>
+        </div>
+    </header>
+
+    <!-- KEYBOARD SCROLL VIDEO SECTION -->
+    <section id="scroll-animation-section">
+        <div class="video-sticky">
+            <!-- Floating Glow Accents -->
+            <div class="video-glow-left"></div>
+            <div class="video-glow-right"></div>
+
+            <div class="video-frame" id="videoFrame">
+                <video muted loop playsinline preload="auto" id="heroVideo">
+                    <source src="/videos/Keyboard-Assembly.mp4" type="video/mp4">
+                </video>
+                <div class="video-overlay">
+                    <h2>Engineered for <span class="gradient-text">Precision</span></h2>
+                    <p>Experience the tactile response and lightning-fast actuation that defines our elite mechanical series.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features-teaser">
+        <div class="section-header">
+            <h2>ENGINEERED FOR <span class="gradient-text">EXCELLENCE</span></h2>
+            <p>Every detail is precision-crafted for the ultimate tactical feedback and speed.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon" style="color: var(--primary);">⚡</span>
+                <h3>Quantum Switches</h3>
+                <p>Ultra-responsive magnetic switches with 0.1mm actuation precision.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon" style="color: var(--secondary);">🚀</span>
+                <h3>Hyper-Speed Polling</h3>
+                <p>8000Hz polling rate for near-zero latency in every keystroke.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon" style="color: var(--secondary);">🔊</span>
+                <h3>Acoustic Dampening</h3>
+                <p>Multi-layer foam architecture for that perfect "thock" sound.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon" style="color: var(--white);">⚙️</span>
+                <h3>Modular Architecture</h3>
+                <p>Fully hot-swappable PCB for effortless customization.</p>
+            </div>
+        </div>
+        <a href="features.html" class="cta-link">Explore All Features →</a>
+    </section>
+
+    <section id="product-showcase">
+        <div class="section-header">
+            <h2>CHOOSE YOUR <span class="gradient-text">WEAPON</span></h2>
+        </div>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="badge badge-primary">Best Seller</div>
+                <div class="product-img"><img src="/images/neon_night.png" alt="CyberKeys PRO keyboard"></div>
+                <h3>CyberKeys PRO</h3>
+                <p class="price">$249.00</p>
+                <a href="builder.html" class="buy-btn">Buy Now →</a>
+            </div>
+            <div class="product-card">
+                <div class="badge badge-primary" style="border-color: var(--muted); color: var(--muted);">Compact</div>
+                <div class="product-img"><img src="/images/artic_minimal.png" alt="CyberKeys LITE keyboard"></div>
+                <h3>CyberKeys LITE</h3>
+                <p class="price">$149.00</p>
+                <a href="builder.html" class="buy-btn">Buy Now →</a>
+            </div>
+            <div class="product-card">
+                <div class="badge badge-secondary">Premium</div>
+                <div class="product-img"><img src="/images/deep_space.png" alt="CyberKeys ELITE keyboard"></div>
+                <h3>CyberKeys ELITE</h3>
+                <p class="price">$349.00</p>
+                <a href="builder.html" class="buy-btn">Buy Now →</a>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <a href="features.html" class="cta-link">View All Models →</a>
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <div class="section-header">
+            <h2>JOIN THE <span class="gradient-text">ELITE</span></h2>
+            <p>Don't just take our word for it.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="avatar"></div>
+                    <div class="user-details">
+                        <h4>Alex Mercer</h4>
+                        <p>Pro Gamer</p>
+                    </div>
+                </div>
+                <div class="stars">★★★★★</div>
+                <p class="quote">"The latency on the CyberKeys PRO is non-existent. It's the fastest board I've ever used in competition."</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="avatar"></div>
+                    <div class="user-details">
+                        <h4>Sarah Chen</h4>
+                        <p>Software Engineer</p>
+                    </div>
+                </div>
+                <div class="stars">★★★★★</div>
+                <p class="quote">"The typing experience is therapeutic. The acoustic dampening makes every keystroke feel premium."</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="avatar"></div>
+                    <div class="user-details">
+                        <h4>Marcus Thorne</h4>
+                        <p>Tech Reviewer</p>
+                    </div>
+                </div>
+                <div class="stars">★★★★★</div>
+                <p class="quote">"CyberKeys has set a new standard for modular keyboards. The build quality is simply unmatched."</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-main">
+            <div class="footer-logo">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">C</div>
+                    CYBER<span>KEYS</span>
+                </a>
+                <p style="color: var(--muted); font-size: 0.9rem; margin-top: 1rem; max-width: 250px;">
+                    Redefining the typing experience with cyber-minimalist design.
+                </p>
+            </div>
+            <div class="footer-nav">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="builder.html">Builder</a></li>
+                        <li><a href="rgb.html">RGB Lighting</a></li>
+                        <li><a href="community.html">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Warranty</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon">𝕏</a>
+                <a href="#" class="social-icon">IG</a>
+                <a href="#" class="social-icon">YT</a>
+                <a href="#" class="social-icon">DC</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2025 CyberKeys. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        console.log("CyberKeys — The Future of Typing");
+
+        // Starfield generation
+        const starfield = document.getElementById('starfield');
+        if (starfield) {
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+                starfield.appendChild(star);
+            }
+        }
+
+        // Active Link Detection
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+
+        // ====== SCROLL-DRIVEN FRAME ANIMATION + PLAY ON SCROLL ======
+        const videoSection = document.getElementById('scroll-animation-section');
+        const videoFrame = document.getElementById('videoFrame');
+        const heroVideo = document.getElementById('heroVideo');
+        
+        if (videoSection && videoFrame && heroVideo) {
+            // Don't autoplay — wait until visible
+            heroVideo.pause();
+            
+            let currentScale = 0.5;
+            let targetScale = 0.5;
+            let currentOpacity = 0;
+            let targetOpacity = 0;
+            let currentRadius = 24;
+            let targetRadius = 24;
+            
+            function lerp(a, b, t) {
+                return a + (b - a) * t;
+            }
+            
+            // Play/pause video based on visibility
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        heroVideo.playbackRate = 2.0; // Play at 2x speed
+                        heroVideo.play().catch(() => {});
+                    } else {
+                        heroVideo.pause();
+                    }
+                });
+            }, { threshold: 0.2 });
+            observer.observe(videoSection);
+            
+            // Frame scale/opacity animation on scroll
+            function updateVideoScroll() {
+                const rect = videoSection.getBoundingClientRect();
+                const sectionHeight = videoSection.offsetHeight;
+                const viewHeight = window.innerHeight;
+                
+                const totalTravel = sectionHeight + viewHeight;
+                const traveled = viewHeight - rect.top;
+                const progress = Math.max(0, Math.min(1, traveled / totalTravel));
+                
+                if (progress < 0.3) {
+                    const t = progress / 0.3;
+                    targetScale = 0.5 + t * 0.5;
+                    targetRadius = 24 * (1 - t);
+                } else if (progress < 0.7) {
+                    targetScale = 1.0;
+                    targetRadius = 0;
+                } else {
+                    const t = (progress - 0.7) / 0.3;
+                    targetScale = 1.0 - t * 0.5;
+                    targetRadius = 24 * t;
+                }
+                
+                if (progress < 0.1) {
+                    targetOpacity = progress / 0.1;
+                } else if (progress < 0.9) {
+                    targetOpacity = 1;
+                } else {
+                    targetOpacity = 1 - ((progress - 0.9) / 0.1);
+                }
+                
+                const smoothing = 0.12;
+                currentScale = lerp(currentScale, targetScale, smoothing);
+                currentOpacity = lerp(currentOpacity, targetOpacity, smoothing);
+                currentRadius = lerp(currentRadius, targetRadius, smoothing);
+                
+                const borderOpacity = currentScale >= 0.98 ? 0 : 1;
+                
+                videoFrame.style.transform = `scale(${currentScale})`;
+                videoFrame.style.opacity = currentOpacity;
+                videoFrame.style.borderRadius = `${currentRadius}px`;
+                videoFrame.style.borderColor = `rgba(255, 255, 255, ${0.1 * borderOpacity})`;
+                videoFrame.style.boxShadow = borderOpacity ? '0 0 60px rgba(0, 255, 136, 0.12)' : 'none';
+                
+                requestAnimationFrame(updateVideoScroll);
+            }
+            
+            requestAnimationFrame(updateVideoScroll);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Lighting | CyberKeys</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505; --surface: #0f0f12; --border: #1a1a1e; --primary: #00ff88;
+            --secondary: #00a36c; --white: #ffffff; --muted: #52525b; --body-text: #a1a1aa;
+            --gradient: linear-gradient(90deg, #00ff88, #00a36c);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; background-color: var(--bg); color: var(--white); }
+        body { opacity: 0; animation: fadeIn 0.4s ease forwards; overflow-x: hidden; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        nav { position: sticky; top: 0; z-index: 1000; background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; height: 80px; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 900; font-size: 1.5rem; text-decoration: none; color: var(--white); }
+        .logo-icon { width: 32px; height: 32px; background: var(--gradient); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--bg); font-size: 1.2rem; }
+        .logo span:last-child { color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: var(--white); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .nav-cta { background: var(--gradient); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s, opacity 0.2s; }
+        .nav-cta:hover { transform: translateY(-2px); opacity: 0.9; }
+        .page-hero { padding: 8rem 5% 4rem; text-align: center; position: relative; }
+        .glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, rgba(0, 163, 108, 0.1) 50%, transparent 100%); z-index: -1; }
+        .page-hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; text-transform: uppercase; margin-bottom: 1.5rem; line-height: 1; }
+        .page-hero p { color: var(--body-text); max-width: 700px; margin: 0 auto; font-size: 1.2rem; }
+        .rgb-demo { padding: 4rem 5%; text-align: center; }
+        .keyboard-preview { background: #111118; padding: 40px; border-radius: 24px; border: 2px solid var(--border); margin: 0 auto 4rem; max-width: 1000px; }
+        .keyboard-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .key { background: #1a1a25; border: 1px solid var(--border); border-radius: 6px; height: 55px; flex: 1; transition: all 0.3s; }
+        .key.wide { flex: 2; } .key.extra-wide { flex: 3; } .key.space { flex: 6; }
+        .presets { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 4rem; }
+        .preset-btn { background: var(--surface); border: 1px solid var(--border); color: var(--white); padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .preset-btn:hover, .preset-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
+        /* Animations */
+        @keyframes wave { 0% { background: var(--primary); } 50% { background: var(--secondary); } 100% { background: var(--primary); } }
+        .wave .key { animation: wave 2s infinite; }
+        .wave .key:nth-child(2) { animation-delay: 0.1s; } .wave .key:nth-child(3) { animation-delay: 0.2s; }
+        @keyframes breathing { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; background: var(--primary); } }
+        .breathing .key { animation: breathing 3s infinite ease-in-out; }
+        @keyframes rainbow { 0% { background: #ff0000; } 20% { background: #ffff00; } 40% { background: #00ff00; } 60% { background: #00ffff; } 80% { background: #0000ff; } 100% { background: #ff00ff; } }
+        .rainbow .key { animation: rainbow 5s infinite linear; }
+        .static-color .key { background: var(--primary); }
+        .neon-pulse .key { animation: wave 0.5s infinite alternate; }
+        .rgb-ecosystem { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 6rem 5%; }
+        .eco-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--primary); padding: 3rem 2rem; border-radius: 16px; transition: transform 0.3s; }
+        .eco-card:nth-child(2) { border-top-color: var(--secondary); }
+        .eco-card:nth-child(3) { border-top-image: var(--gradient); border-top-width: 2px; }
+        .eco-card:hover { transform: translateY(-10px); }
+        .eco-card h3 { margin-bottom: 1rem; font-size: 1.5rem; }
+        .eco-card p { color: var(--body-text); line-height: 1.6; }
+        .rgb-cta { padding: 6rem 5%; text-align: center; }
+        .rgb-cta-card { max-width: 900px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 4rem 3rem; position: relative; overflow: hidden; }
+        .rgb-cta-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--primary), #6c63ff, var(--primary)); background-size: 200% 100%; animation: shimmer-border 3s linear infinite; }
+        @keyframes shimmer-border { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .rgb-cta-card h2 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; text-transform: uppercase; }
+        .rgb-cta-card p { color: var(--body-text); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.6; }
+        .rgb-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+        .rgb-stat { text-align: center; }
+        .rgb-stat-num { font-size: 2rem; font-weight: 900; color: var(--primary); display: block; }
+        .rgb-stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+        .rgb-cta-btn { background: var(--gradient); color: var(--bg); padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; display: inline-block; transition: all 0.2s; font-size: 1rem; }
+        .rgb-cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2); }
+        footer { background: #080810; padding: 5rem 5% 2rem; border-top: 1px solid var(--border); }
+        .footer-main { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 3rem; margin-bottom: 4rem; }
+        .footer-nav { flex: 2; display: flex; justify-content: center; gap: 4rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; text-transform: uppercase; font-size: 0.9rem; }
+        .footer-col ul { list-style: none; } .footer-col ul li { margin-bottom: 0.75rem; }
+        .footer-col ul li a { text-decoration: none; color: var(--muted); transition: color 0.2s; }
+        .footer-col ul li a:hover { color: var(--primary); }
+        .footer-social { display: flex; gap: 1.5rem; }
+        .social-icon { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); text-decoration: none; transition: all 0.2s; }
+        .social-icon:hover { border-color: var(--primary); color: var(--primary); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; text-align: center; color: var(--muted); font-size: 0.8rem; }
+        @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo"><div class="logo-icon">C</div>CYBER<span>KEYS</span></a>
+        <div class="nav-links"><a href="features.html">Features</a><a href="builder.html">Builder</a><a href="rgb.html">RGB</a><a href="community.html">Community</a></div>
+        <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+    </nav>
+    <header class="page-hero"><div class="glow"></div><h1>ILLUMINATE YOUR <br><span class="gradient-text">EXPERIENCE</span></h1><p>Per-key RGB with 16.8 million colors. Sync your entire setup with our proprietary software.</p></header>
+    <section class="rgb-demo">
+        <div class="keyboard-preview" id="keyboard-preview">
+            <div class="keyboard-row"><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key wide"></div></div>
+            <div class="keyboard-row"><div class="key wide"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div></div>
+            <div class="keyboard-row"><div class="key extra-wide"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key extra-wide"></div></div>
+            <div class="keyboard-row"><div class="key wide"></div><div class="key"></div><div class="key"></div><div class="key space"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div></div>
+        </div>
+        <div class="presets">
+            <button class="preset-btn active" onclick="setPreset('wave')">Wave</button>
+            <button class="preset-btn" onclick="setPreset('breathing')">Breathing</button>
+            <button class="preset-btn" onclick="setPreset('rainbow')">Rainbow</button>
+            <button class="preset-btn" onclick="setPreset('static-color')">Static</button>
+            <button class="preset-btn" onclick="setPreset('neon-pulse')">Neon Pulse</button>
+        </div>
+    </section>
+    <section class="rgb-ecosystem">
+        <div class="eco-card"><h3>Per-Key Control</h3><p>Assign any of 16.8M colors to each individual key using our intuitive software interface.</p></div>
+        <div class="eco-card"><h3>Software Sync</h3><p>Sync with your monitor, headset, mouse, and PC components via the CyberSync app.</p></div>
+        <div class="eco-card"><h3>On-Board Memory</h3><p>Save up to 5 RGB profiles directly to the keyboard hardware for use on any device.</p></div>
+    </section>
+    <section class="rgb-cta">
+        <div class="rgb-cta-card">
+            <h2>READY TO <span class="gradient-text">LIGHT UP?</span></h2>
+            <p>Customize every key, sync your entire setup, and create lighting effects that match your style. Start building your dream keyboard today.</p>
+            <div class="rgb-stats">
+                <div class="rgb-stat"><span class="rgb-stat-num">16.8M</span><span class="rgb-stat-label">Colors</span></div>
+                <div class="rgb-stat"><span class="rgb-stat-num">5</span><span class="rgb-stat-label">Onboard Profiles</span></div>
+                <div class="rgb-stat"><span class="rgb-stat-num">20+</span><span class="rgb-stat-label">Preset Effects</span></div>
+            </div>
+            <a href="builder.html" class="rgb-cta-btn">Build Your Setup →</a>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-main">
+            <div class="footer-logo"><a href="index.html" class="logo"><div class="logo-icon">C</div>CYBER<span>KEYS</span></a></div>
+            <div class="footer-nav">
+                <div class="footer-col"><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="builder.html">Builder</a></li><li><a href="rgb.html">RGB Lighting</a></li><li><a href="community.html">Community</a></li></ul></div>
+                <div class="footer-col"><h4>Support</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Contact Us</a></li></ul></div>
+            </div>
+            <div class="footer-social"><a href="#" class="social-icon">𝕏</a><a href="#" class="social-icon">IG</a><a href="#" class="social-icon">YT</a><a href="#" class="social-icon">DC</a></div>
+        </div>
+        <div class="footer-bottom">© 2025 CyberKeys. All rights reserved.</div>
+    </footer>
+    <script>
+        console.log("CyberKeys — The Future of Typing");
+        function setPreset(preset) {
+            const kb = document.getElementById('keyboard-preview');
+            kb.className = 'keyboard-preview ' + preset;
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText.toLowerCase().replace(' ', '-') === preset) btn.classList.add('active');
+            });
+        }
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-links a').forEach(link => { if (link.getAttribute('href') === currentPath) link.classList.add('active'); });
+        setPreset('wave');
+    </script>
+</body>
+</html>

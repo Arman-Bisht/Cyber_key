@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community | CyberKeys</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505; --surface: #0f0f12; --border: #1a1a1e; --primary: #00ff88;
+            --secondary: #00a36c; --white: #ffffff; --muted: #52525b; --body-text: #a1a1aa;
+            --gradient: linear-gradient(90deg, #00ff88, #00a36c);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; background-color: var(--bg); color: var(--white); }
+        body { opacity: 0; animation: fadeIn 0.4s ease forwards; overflow-x: hidden; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        nav { position: sticky; top: 0; z-index: 1000; background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; height: 80px; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 900; font-size: 1.5rem; text-decoration: none; color: var(--white); }
+        .logo-icon { width: 32px; height: 32px; background: var(--gradient); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--bg); font-size: 1.2rem; }
+        .logo span:last-child { color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: var(--white); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .nav-cta { background: var(--gradient); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s, opacity 0.2s; }
+        .nav-cta:hover { transform: translateY(-2px); opacity: 0.9; }
+        .page-hero { padding: 8rem 5% 4rem; text-align: center; }
+        .page-hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; text-transform: uppercase; margin-bottom: 1.5rem; }
+        .page-hero p { color: var(--body-text); max-width: 700px; margin: 0 auto; font-size: 1.2rem; margin-bottom: 3rem; }
+        .stats { display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
+        .stat-item { text-align: center; } .stat-num { font-size: 3rem; font-weight: 900; color: var(--primary); display: block; } .stat-label { color: var(--muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 6rem 5%; }
+        .testimonial-card { background: var(--surface); border: 1px solid var(--border); padding: 2.5rem; border-radius: 16px; }
+        .user-info { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--gradient); }
+        .user-details h4 { font-size: 1rem; margin-bottom: 0.2rem; } .user-details p { font-size: 0.8rem; color: var(--primary); }
+        .stars { color: var(--primary); margin-bottom: 1rem; font-size: 0.8rem; } .quote { font-style: italic; color: var(--body-text); line-height: 1.6; }
+        .showcase { padding: 6rem 5%; } .showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .build-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: transform 0.3s; }
+        .build-card:hover { transform: translateY(-10px); }
+        .build-img { width: 100%; height: 200px; overflow: hidden; background: var(--surface); }
+        .build-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+        .build-card:hover .build-img img { transform: scale(1.05); }
+        .build-info { padding: 1.5rem; } .build-info h4 { margin-bottom: 0.5rem; } .build-info p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
+        .build-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--primary); }
+        .discord-cta { margin: 6rem 5%; background: var(--surface); border: 2px solid #5865F2; border-radius: 24px; padding: 4rem; text-align: center; }
+        .discord-cta h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .discord-btn { background: #5865F2; color: var(--white); padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 2rem; }
+        .newsletter { padding: 6rem 5%; text-align: center; background: rgba(255,255,255,0.02); }
+        .newsletter h2 { margin-bottom: 2rem; font-weight: 800; }
+        .news-form { display: flex; justify-content: center; gap: 1rem; max-width: 500px; margin: 0 auto 1rem; }
+        .news-form input { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 1rem; border-radius: 8px; color: var(--white); }
+        .news-form input:focus { border-color: var(--primary); outline: none; }
+        .news-form button { background: var(--gradient); color: var(--bg); border: none; padding: 0 2rem; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        footer { background: #080810; padding: 5rem 5% 2rem; border-top: 1px solid var(--border); }
+        .footer-main { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 3rem; margin-bottom: 4rem; }
+        .footer-nav { flex: 2; display: flex; justify-content: center; gap: 4rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; text-transform: uppercase; font-size: 0.9rem; }
+        .footer-col ul { list-style: none; } .footer-col ul li { margin-bottom: 0.75rem; }
+        .footer-col ul li a { text-decoration: none; color: var(--muted); transition: color 0.2s; }
+        .footer-col ul li a:hover { color: var(--primary); }
+        .footer-social { display: flex; gap: 1.5rem; }
+        .social-icon { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); text-decoration: none; transition: all 0.2s; }
+        .social-icon:hover { border-color: var(--primary); color: var(--primary); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; text-align: center; color: var(--muted); font-size: 0.8rem; }
+        @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .news-form { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo"><div class="logo-icon">C</div>CYBER<span>KEYS</span></a>
+        <div class="nav-links"><a href="features.html">Features</a><a href="builder.html">Builder</a><a href="rgb.html">RGB</a><a href="community.html">Community</a></div>
+        <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+    </nav>
+    <header class="page-hero"><h1>JOIN THE <span class="gradient-text">ELITE</span></h1><p>Connect with 50,000+ keyboard enthusiasts, share your builds, and get exclusive early access.</p>
+        <div class="stats"><div class="stat-item"><span class="stat-num">50K+</span><span class="stat-label">Members</span></div><div class="stat-item"><span class="stat-num">12K+</span><span class="stat-label">Builds Shared</span></div><div class="stat-item"><span class="stat-num">4.9★</span><span class="stat-label">Rating</span></div></div>
+    </header>
+    <section class="testimonials-grid">
+        <div class="testimonial-card"><div class="user-info"><div class="avatar"></div><div class="user-details"><h4>Alex Mercer</h4><p>Pro Gamer</p></div></div><div class="stars">★★★★★</div><p class="quote">"The latency on the CyberKeys PRO is non-existent. It's the fastest board I've ever used."</p></div>
+        <div class="testimonial-card"><div class="user-info"><div class="avatar"></div><div class="user-details"><h4>Sarah Chen</h4><p>Software Engineer</p></div></div><div class="stars">★★★★★</div><p class="quote">"The typing experience is therapeutic. The acoustic dampening makes every keystroke feel premium."</p></div>
+        <div class="testimonial-card"><div class="user-info"><div class="avatar"></div><div class="user-details"><h4>Marcus Thorne</h4><p>Tech Reviewer</p></div></div><div class="stars">★★★★★</div><p class="quote">"CyberKeys has set a new standard for modular keyboards. The build quality is simply unmatched."</p></div>
+        <div class="testimonial-card"><div class="user-info"><div class="avatar"></div><div class="user-details"><h4>Jin Park</h4><p>Streamer</p></div></div><div class="stars">★★★★★</div><p class="quote">"The RGB lighting is the best in the business. It looks incredible on stream."</p></div>
+        <div class="testimonial-card"><div class="user-info"><div class="avatar"></div><div class="user-details"><h4>Priya Sharma</h4><p>Writer</p></div></div><div class="stars">★★★★★</div><p class="quote">"I've never enjoyed typing this much. The tactile feedback is perfect for long writing sessions."</p></div>
+        <div class="testimonial-card"><div class="user-info"><div class="avatar"></div><div class="user-details"><h4>Tom Walsh</h4><p>Developer</p></div></div><div class="stars">★★★★★</div><p class="quote">"The hot-swap feature is a game changer. I love being able to switch switches whenever I want."</p></div>
+    </section>
+    <section class="showcase"><div style="text-align: center;"><h2>FEATURED <span class="gradient-text">BUILDS</span></h2></div><div class="showcase-grid">
+        <div class="build-card"><div class="build-img"><img src="/images/neon_night.png" alt="Neon Night keyboard build"></div><div class="build-info"><h4>Neon Night</h4><p>by CyberPunk99</p><div class="build-meta"><span>Gaming Setup</span><span>❤️ 1.2k</span></div></div></div>
+        <div class="build-card"><div class="build-img"><img src="/images/artic_minimal.png" alt="Arctic Minimal keyboard build"></div><div class="build-info"><h4>Arctic Minimal</h4><p>by SnowWhite</p><div class="build-meta"><span>Minimal Office</span><span>❤️ 850</span></div></div></div>
+        <div class="build-card"><div class="build-img"><img src="/images/Sakura_dream.png" alt="Sakura Dream keyboard build"></div><div class="build-info"><h4>Sakura Dream</h4><p>by CherryBlossom</p><div class="build-meta"><span>Creative Studio</span><span>❤️ 2.1k</span></div></div></div>
+        <div class="build-card"><div class="build-img"><img src="/images/deep_space.png" alt="Deep Space keyboard build"></div><div class="build-info"><h4>Deep Space</h4><p>by VoidWalker</p><div class="build-meta"><span>Dark Setup</span><span>❤️ 1.5k</span></div></div></div>
+    </div></section>
+    <div class="discord-cta"><h2>LIVE IN THE DISCORD</h2><p>Get help, share builds, and get first access to new drops.</p><a href="#" class="discord-btn">Join Our Discord →</a></div>
+    <section class="newsletter"><h2>STAY IN THE LOOP</h2><div class="news-form"><input type="email" placeholder="Enter your email"><button>Subscribe</button></div><p style="color: var(--muted); font-size: 0.8rem;">No spam. Only drops, updates, and community highlights.</p></section>
+    <footer>
+        <div class="footer-main">
+            <div class="footer-logo"><a href="index.html" class="logo"><div class="logo-icon">C</div>CYBER<span>KEYS</span></a></div>
+            <div class="footer-nav">
+                <div class="footer-col"><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="builder.html">Builder</a></li><li><a href="rgb.html">RGB Lighting</a></li><li><a href="community.html">Community</a></li></ul></div>
+                <div class="footer-col"><h4>Support</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Contact Us</a></li></ul></div>
+            </div>
+            <div class="footer-social"><a href="#" class="social-icon">𝕏</a><a href="#" class="social-icon">IG</a><a href="#" class="social-icon">YT</a><a href="#" class="social-icon">DC</a></div>
+        </div>
+        <div class="footer-bottom">© 2025 CyberKeys. All rights reserved.</div>
+    </footer>
+    <script>
+        console.log("CyberKeys — The Future of Typing");
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-links a').forEach(link => { if (link.getAttribute('href') === currentPath) link.classList.add('active'); });
+    </script>
+</body>
+</html>

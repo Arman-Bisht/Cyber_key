@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features | CyberKeys</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0f0f12;
+            --border: #1a1a1e;
+            --primary: #00ff88;
+            --secondary: #00a36c;
+            --white: #ffffff;
+            --muted: #52525b;
+            --body-text: #a1a1aa;
+            --gradient: linear-gradient(90deg, #00ff88, #00a36c);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--bg);
+            color: var(--white);
+        }
+
+        body {
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Navbar */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 900;
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-size: 1.2rem;
+        }
+
+        .logo span:last-child {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            background: var(--gradient);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* Page Hero */
+        .page-hero {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .page-hero p {
+            color: var(--body-text);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Feature Grid */
+        .feature-deep-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2.5rem;
+            padding: 6rem 5%;
+        }
+
+        @media (max-width: 480px) {
+            .feature-deep-grid { grid-template-columns: 1fr; }
+        }
+
+        .feature-deep-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            border-radius: 24px;
+            transition: all 0.3s;
+        }
+
+        .feature-deep-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-deep-icon {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .feature-deep-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-deep-card p {
+            color: var(--body-text);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .spec-pill {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Table Section */
+        .table-section {
+            padding: 6rem 5%;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 3rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            background: var(--surface);
+        }
+
+        th, td {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(0, 255, 136, 0.05);
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        tr:hover {
+            background: rgba(0, 255, 136, 0.03);
+        }
+
+        .check { color: var(--primary); font-weight: 900; }
+        .cross { color: var(--muted); }
+
+        /* CTA Banner */
+        .cta-banner {
+            margin: 6rem 5%;
+            padding: 5rem;
+            background: var(--surface);
+            border-radius: 32px;
+            border: 1px solid transparent;
+            background-image: linear-gradient(var(--surface), var(--surface)), var(--gradient);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            text-align: center;
+        }
+
+        .cta-banner h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 2rem;
+        }
+
+        .btn-large {
+            display: inline-block;
+            background: var(--gradient);
+            color: var(--bg);
+            padding: 1.2rem 3rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            transition: all 0.2s;
+        }
+
+        .btn-large:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 95, 31, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: #080810;
+            padding: 5rem 5% 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-logo {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-nav {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            min-width: 300px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-col ul li a {
+            text-decoration: none;
+            color: var(--muted);
+            transition: color 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary);
+        }
+
+        .footer-social {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.5rem;
+            min-width: 200px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .social-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta { display: none; }
+            .cta-banner { padding: 3rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">C</div>
+            CYBER<span>KEYS</span>
+        </a>
+        <div class="nav-links">
+            <a href="features.html">Features</a>
+            <a href="builder.html">Builder</a>
+            <a href="rgb.html">RGB</a>
+            <a href="community.html">Community</a>
+        </div>
+        <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+    </nav>
+
+    <header class="page-hero">
+        <h1>ENGINEERED FOR <br><span class="gradient-text">EXCELLENCE</span></h1>
+        <p>Every component is meticulously crafted to deliver an unparalleled typing experience. From magnetic switches to CNC-milled aluminum.</p>
+    </header>
+
+    <section class="feature-deep-grid">
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--primary);">⚡</span>
+            <h3>Quantum Magnetic Switches</h3>
+            <p>Adjustable actuation points from 0.1mm to 4.0mm. Rapid trigger technology for instantaneous reset in competitive gaming.</p>
+            <span class="spec-pill">0.1mm Precision</span>
+        </div>
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--secondary);">🚀</span>
+            <h3>8000Hz Hyper-Speed Polling</h3>
+            <p>Our custom controller processes inputs at 8x the speed of standard gaming keyboards, reducing input lag to under 0.125ms.</p>
+            <span class="spec-pill">8000Hz Rate</span>
+        </div>
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--secondary);">🔊</span>
+            <h3>Multi-Layer Acoustic Dampening</h3>
+            <p>Poron foam, silicone gaskets, and switch pads work in harmony to eliminate ping and create a deep, satisfying acoustic profile.</p>
+            <span class="spec-pill">Thock Certified</span>
+        </div>
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--white);">⚙️</span>
+            <h3>Hot-Swap Modular Architecture</h3>
+            <p>Change your switches in seconds without soldering. Compatible with all 3-pin and 5-pin mechanical and magnetic switches.</p>
+            <span class="spec-pill">Tool-Free Swap</span>
+        </div>
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--primary);">🌈</span>
+            <h3>Per-Key RGB (16.8M Colors)</h3>
+            <p>Individually addressable LEDs with south-facing orientation for maximum brightness even with thick PBT keycaps.</p>
+            <span class="spec-pill">16.8M Colors</span>
+        </div>
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--primary);">🏗️</span>
+            <h3>Gasket Mount Suspension</h3>
+            <p>The internal plate is suspended by high-density gaskets, providing a flexible, cushioned typing feel that reduces finger fatigue.</p>
+            <span class="spec-pill">Zero Ping</span>
+        </div>
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--white);">🏗️</span>
+            <h3>Aluminum CNC Frame</h3>
+            <p>Carved from a solid block of 6063 aircraft-grade aluminum, then bead-blasted and anodized for a flawless, durable finish.</p>
+            <span class="spec-pill">Aircraft Grade</span>
+        </div>
+        <div class="feature-deep-card">
+            <span class="feature-deep-icon" style="color: var(--secondary);">💾</span>
+            <h3>On-Board Memory</h3>
+            <p>Save up to 5 lighting and macro profiles directly to the hardware. No background software required once configured.</p>
+            <span class="spec-pill">5 Profiles</span>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <div style="text-align: center;">
+            <h2>COMPARE THE <span class="gradient-text">LINEUP</span></h2>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>CyberKeys LITE</th>
+                        <th>CyberKeys PRO</th>
+                        <th>CyberKeys ELITE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Price</td>
+                        <td>$149</td>
+                        <td>$249</td>
+                        <td>$349</td>
+                    </tr>
+                    <tr>
+                        <td>Switch Type</td>
+                        <td>Mechanical</td>
+                        <td>Magnetic</td>
+                        <td>Magnetic Pro</td>
+                    </tr>
+                    <tr>
+                        <td>Polling Rate</td>
+                        <td>1000Hz</td>
+                        <td>8000Hz</td>
+                        <td>8000Hz</td>
+                    </tr>
+                    <tr>
+                        <td>RGB Lighting</td>
+                        <td>Zone RGB</td>
+                        <td>Per-Key RGB</td>
+                        <td>Per-Key RGB + Underglow</td>
+                    </tr>
+                    <tr>
+                        <td>Hot-Swap</td>
+                        <td class="check">✔</td>
+                        <td class="check">✔</td>
+                        <td class="check">✔</td>
+                    </tr>
+                    <tr>
+                        <td>Frame Material</td>
+                        <td>Polycarbonate</td>
+                        <td>Aluminum</td>
+                        <td>Brass + Aluminum</td>
+                    </tr>
+                    <tr>
+                        <td>Weight</td>
+                        <td>850g</td>
+                        <td>1.4kg</td>
+                        <td>2.1kg</td>
+                    </tr>
+                    <tr>
+                        <td>Battery (Wireless)</td>
+                        <td class="cross">✘</td>
+                        <td>4000mAh</td>
+                        <td>8000mAh</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="cta-banner">
+        <h2>READY TO BUILD YOUR PERFECT BOARD?</h2>
+        <a href="builder.html" class="btn-large">Start Configuring →</a>
+    </div>
+
+    <footer>
+        <div class="footer-main">
+            <div class="footer-logo">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">C</div>
+                    CYBER<span>KEYS</span>
+                </a>
+                <p style="color: var(--muted); font-size: 0.9rem; margin-top: 1rem; max-width: 250px;">
+                    Redefining the typing experience with cyber-minimalist design.
+                </p>
+            </div>
+            <div class="footer-nav">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="builder.html">Builder</a></li>
+                        <li><a href="rgb.html">RGB Lighting</a></li>
+                        <li><a href="community.html">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Warranty</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon">𝕏</a>
+                <a href="#" class="social-icon">IG</a>
+                <a href="#" class="social-icon">YT</a>
+                <a href="#" class="social-icon">DC</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2025 CyberKeys. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        console.log("CyberKeys — The Future of Typing");
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) link.classList.add('active');
+        });
+    </script>
+</body>
+</html>

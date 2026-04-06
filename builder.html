@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Builder | CyberKeys</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505; --surface: #0f0f12; --border: #1a1a1e; --primary: #00ff88;
+            --secondary: #00a36c; --white: #ffffff; --muted: #52525b; --body-text: #a1a1aa;
+            --gradient: linear-gradient(90deg, #00ff88, #00a36c);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; background-color: var(--bg); color: var(--white); }
+        body { opacity: 0; animation: fadeIn 0.4s ease forwards; overflow-x: hidden; padding-bottom: 100px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        nav { position: sticky; top: 0; z-index: 1000; background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; height: 80px; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 900; font-size: 1.5rem; text-decoration: none; color: var(--white); }
+        .logo-icon { width: 32px; height: 32px; background: var(--gradient); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--bg); font-size: 1.2rem; }
+        .logo span:last-child { color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: var(--white); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .nav-cta { background: var(--gradient); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s, opacity 0.2s; }
+        .nav-cta:hover { transform: translateY(-2px); opacity: 0.9; }
+        .page-hero { padding: 6rem 5% 3rem; text-align: center; }
+        .page-hero h1 { font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; }
+        .page-hero p { color: var(--body-text); max-width: 600px; margin: 0 auto; }
+        .builder-layout {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            padding: 2rem 5%;
+            width: 100%;
+            overflow-x: auto;
+        }
+        .keyboard-side {
+            flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+            padding-bottom: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .keyboard-side::-webkit-scrollbar { height: 6px; }
+        .keyboard-side::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+        .options-side {
+            width: 380px;
+            flex-shrink: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            height: fit-content;
+        }
+        #keyboard-preview {
+            display: inline-flex;
+            flex-direction: row;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 20px;
+            background: #111118;
+            border-radius: 16px;
+            border: 2px solid var(--case-color, #a855f7);
+            min-width: min-content;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .kb-main { display: flex; flex-direction: column; gap: 5px; }
+        .kb-nav { display: flex; flex-direction: column; gap: 5px; }
+        .kb-numpad {
+            display: grid;
+            grid-template-columns: repeat(4, 38px);
+            grid-auto-rows: 38px;
+            gap: 5px;
+        }
+        .kb-row { display: flex; gap: 5px; }
+        .key {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 6px;
+            min-width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .key:hover {
+            background: #252545;
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+        .key.clicked {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--primary);
+            transform: scale(0.95);
+        }
+        .key.wide { min-width: 56px; }
+        .key.wider { min-width: 72px; }
+        .key.widest { min-width: 88px; }
+        .key.space { min-width: 200px; }
+        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .tab-btn { background: none; border: none; color: var(--muted); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; cursor: pointer; transition: color 0.2s; padding: 0.5rem 0; position: relative; }
+        .tab-btn.active { color: var(--primary); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -1rem; left: 0; width: 100%; height: 2px; background: var(--primary); }
+        .tab-content { display: none; } .tab-content.active { display: block; }
+        .option-group { margin-bottom: 2rem; } .option-group h4 { font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem; color: var(--muted); }
+        .swatch-grid { display: flex; gap: 1rem; } .swatch { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+        .swatch.active { border-color: var(--primary); } .pill-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .pill { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); padding: 0.6rem 1.2rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .pill.active { background: rgba(0, 255, 136, 0.1); border-color: var(--primary); color: var(--primary); }
+        
+        /* Option Cards */
+        .option-card { 
+            background: rgba(255,255,255,0.02); 
+            border: 1.5px solid var(--border); 
+            padding: 1rem; 
+            border-radius: 12px; 
+            margin-bottom: 1rem; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 1rem; 
+            transition: all 0.2s; 
+            position: relative;
+        }
+        .option-card:hover, .option-card.active { 
+            border-color: var(--primary); 
+            background: rgba(0, 255, 136, 0.05); 
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
+        }
+        .option-card.active {
+            border: 1.5px solid var(--primary);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+        }
+        .option-card.active::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Keycap Grid Fix */
+        .keycaps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .keycap-card {
+            background: #1a1a2a;
+            border: 1.5px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .keycap-card:hover, .keycap-card.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+        }
+        .keycap-card.active::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .keycap-card .cap-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+        .keycap-card .cap-sub {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+
+        .color-circle { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; } 
+        .option-info h5 { font-size: 0.9rem; margin-bottom: 0.2rem; } 
+        .option-info p { font-size: 0.75rem; color: var(--muted); }
+        .premium-badge { font-size: 0.6rem; background: var(--secondary); color: var(--bg); padding: 0.2rem 0.5rem; border-radius: 4px; margin-left: auto; }
+
+        /* Keyboard Visual Effects */
+        /* Switch Tints */
+        #keyboard-preview.switch-red .key { background: #2a1515; border-color: #ff444466; box-shadow: inset 0 0 6px rgba(255, 68, 68, 0.2); }
+        #keyboard-preview.switch-brown .key { background: #1e1508; border-color: #aa660066; box-shadow: inset 0 0 6px rgba(170, 102, 0, 0.2); }
+        #keyboard-preview.switch-blue .key { background: #0a1525; border-color: var(--primary); box-shadow: inset 0 0 6px rgba(0, 255, 136, 0.2); }
+
+        /* Keycap Styles */
+        #keyboard-preview.caps-carbon .key { background: #0d0d0d !important; border-color: #333 !important; color: #888888 !important; font-family: monospace !important; }
+        #keyboard-preview.caps-white .key { background: #e8e8e8 !important; border-color: #cccccc !important; color: #222222 !important; font-family: sans-serif !important; }
+        #keyboard-preview.caps-pink .key { background: #2a1020 !important; border-color: #ff69b466 !important; color: #ff9ab5 !important; font-family: sans-serif !important; }
+        #keyboard-preview.caps-galaxy .key { background: #0d0820 !important; border-color: #6644cc66 !important; color: #aa88ff !important; font-family: monospace !important; }
+
+        /* Switch Glow priority */
+        #keyboard-preview.switch-red .key { box-shadow: inset 0 0 6px rgba(255, 68, 68, 0.2) !important; }
+        #keyboard-preview.switch-brown .key { box-shadow: inset 0 0 6px rgba(170, 102, 0, 0.2) !important; }
+        #keyboard-preview.switch-blue .key { box-shadow: inset 0 0 6px rgba(0, 255, 136, 0.2) !important; }
+
+        .price-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 17, 24, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        .total-price { font-size: 1.5rem; font-weight: 800; } .add-to-cart { background: var(--gradient); color: var(--bg); padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; transition: transform 0.2s; }
+        .add-to-cart:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo"><div class="logo-icon">C</div>CYBER<span>KEYS</span></a>
+        <div class="nav-links"><a href="features.html">Features</a><a href="builder.html">Builder</a><a href="rgb.html">RGB</a><a href="community.html">Community</a></div>
+        <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+    </nav>
+    <header class="page-hero"><h1>BUILD YOUR <span class="gradient-text">WEAPON</span></h1><p>Customize every aspect of your keyboard. Click the keys to test the feel.</p></header>
+    <div class="builder-layout">
+        <div class="keyboard-side">
+            <div id="keyboard-preview">
+                <!-- Keyboard rendered here -->
+            </div>
+        </div>
+        <div class="options-side">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="case">Case</button>
+                <button class="tab-btn" data-tab="switches">Switches</button>
+                <button class="tab-btn" data-tab="keycaps">Keycaps</button>
+            </div>
+            <div id="case" class="tab-content active">
+                <div class="option-group">
+                    <h4>Color</h4>
+                    <div class="swatch-grid">
+                        <div class="swatch active" style="background: #111118;" data-color="#111118"></div>
+                        <div class="swatch" style="background: #3f3f46;" data-color="#3f3f46"></div>
+                        <div class="swatch" style="background: #f4f4f5;" data-color="#f4f4f5"></div>
+                        <div class="swatch" style="background: #008b8b;" data-color="#008b8b"></div>
+                        <div class="swatch" style="background: #6d28d9;" data-color="#6d28d9"></div>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <h4>Size</h4>
+                    <div class="pill-grid" id="size-pills">
+                        <div class="pill active" data-extra="0">65%</div>
+                        <div class="pill" data-extra="20">TKL</div>
+                        <div class="pill" data-extra="40">Full-Size</div>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <h4>Material</h4>
+                    <div class="pill-grid" id="material-pills">
+                        <div class="pill active" data-extra="30">Aluminum <span class="premium-badge">+$30</span></div>
+                        <div class="pill" data-extra="0">Polycarbonate</div>
+                    </div>
+                </div>
+            </div>
+            <div id="switches" class="tab-content">
+                <div class="option-card" data-switch="red" data-extra="0">
+                    <div class="color-circle" style="background: #ef4444;"></div>
+                    <div class="option-info"><h5>Linear Red</h5><p>Smooth & Silent</p></div>
+                </div>
+                <div class="option-card" data-switch="brown" data-extra="10">
+                    <div class="color-circle" style="background: #92400e;"></div>
+                    <div class="option-info"><h5>Tactile Brown</h5><p>Bump & Balance</p></div>
+                    <span class="premium-badge">+$10</span>
+                </div>
+                <div class="option-card active" data-switch="blue" data-extra="0">
+                    <div class="color-circle" style="background: #3b82f6;"></div>
+                    <div class="option-info"><h5>Clicky Blue</h5><p>Click & Clack</p></div>
+                </div>
+            </div>
+            <div id="keycaps" class="tab-content">
+                <div class="keycaps-grid">
+                    <div class="keycap-card active" data-caps="carbon" data-extra="0">
+                        <div class="color-circle" style="background: #1f2937;"></div>
+                        <div class="option-info">
+                            <div class="cap-name">Carbon Black</div>
+                            <div class="cap-sub">PBT Double-Shot</div>
+                        </div>
+                    </div>
+                    <div class="keycap-card" data-caps="white" data-extra="0">
+                        <div class="color-circle" style="background: #ffffff; border: 1px solid #ddd;"></div>
+                        <div class="option-info">
+                            <div class="cap-name">Arctic White</div>
+                            <div class="cap-sub">PBT Double-Shot</div>
+                        </div>
+                    </div>
+                    <div class="keycap-card" data-caps="pink" data-extra="20">
+                        <div class="color-circle" style="background: #fbcfe8;"></div>
+                        <div class="option-info">
+                            <div class="cap-name">Sakura Pink</div>
+                            <div class="cap-sub">Dye-Sub PBT</div>
+                        </div>
+                        <span class="premium-badge">+$20</span>
+                    </div>
+                    <div class="keycap-card" data-caps="galaxy" data-extra="0">
+                        <div class="color-circle" style="background: #4c1d95;"></div>
+                        <div class="option-info">
+                            <div class="cap-name">Galaxy Dark</div>
+                            <div class="cap-sub">Laser Etched ABS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="price-bar"><div class="total-price">Total Build: <span id="price-display">$249.00</span></div><a href="#" class="add-to-cart">Add to Cart →</a></div>
+    <script>
+        console.log("CyberKeys — The Future of Typing");
+        let basePrice = 219, casePrice = 30, sizePrice = 0, switchPrice = 0, keycapPrice = 0;
+        
+        function updatePrice() { 
+            const total = basePrice + casePrice + sizePrice + switchPrice + keycapPrice; 
+            document.getElementById('price-display').innerText = `$${total.toFixed(2)}`; 
+        }
+
+        const fkeys = () => `
+            <div style="width:12px"></div>
+            <div class="key">F1</div><div class="key">F2</div><div class="key">F3</div><div class="key">F4</div>
+            <div style="width:12px"></div>
+            <div class="key">F5</div><div class="key">F6</div><div class="key">F7</div><div class="key">F8</div>
+            <div style="width:12px"></div>
+            <div class="key">F9</div><div class="key">F10</div><div class="key">F11</div><div class="key">F12</div>
+        `;
+        const numRow = () => ['1','2','3','4','5','6','7','8','9','0','-','='].map(k => `<div class="key">${k}</div>`).join('');
+        const qRow = () => ['Q','W','E','R','T','Y','U','I','O','P','[',']'].map(k => `<div class="key">${k}</div>`).join('');
+        const aRow = () => ['A','S','D','F','G','H','J','K','L',';',"'"].map(k => `<div class="key">${k}</div>`).join('');
+        const zRow = () => ['Z','X','C','V','B','N','M',',','.','/'].map(k => `<div class="key">${k}</div>`).join('');
+
+        function renderKeyboard(size) {
+            const preview = document.getElementById('keyboard-preview');
+            preview.innerHTML = '';
+            
+            // Block 1: Main alphanumeric
+            const main = document.createElement('div');
+            main.className = 'kb-main';
+            
+            let mainHTML = '';
+            
+            // Row 0 (Function Row) for TKL and Full-Size
+            if (size === 'TKL' || size === 'Full-Size') {
+                mainHTML += `<div class="kb-row"><div class="key">Esc</div>${fkeys()}</div>`;
+            }
+            
+            // Row 1: Esc + 13 number keys + Backspace (wider)
+            mainHTML += `<div class="kb-row"><div class="key">\`</div>${numRow()}<div class="key wide">BS</div></div>`;
+            
+            // Row 2: Tab (wider) + 12 letter keys + backslash
+            mainHTML += `<div class="kb-row"><div class="key wide">Tab</div>${qRow()}<div class="key">\\</div></div>`;
+            
+            // Row 3: CapsLock (wider) + 11 letter keys + Enter (wider)
+            mainHTML += `<div class="kb-row"><div class="key wider">Caps</div>${aRow()}<div class="key wider">Enter</div></div>`;
+            
+            // Row 4: LShift (widest) + 10 letter keys + RShift (wider)
+            mainHTML += `<div class="kb-row"><div class="key widest">LShift</div>${zRow()}<div class="key widest">RShift</div></div>`;
+            
+            // Row 5: Ctrl, Win, Alt, Space (very wide), Alt, Fn, Ctrl, Arrows (3 keys: left cluster)
+            let row5HTML = `<div class="kb-row"><div class="key wide">Ctrl</div><div class="key">Win</div><div class="key wide">Alt</div><div class="key space">Space</div><div class="key wide">Alt</div><div class="key">Fn</div><div class="key wide">Ctrl</div>`;
+            if (size === '65%') {
+                row5HTML += `<div class="key">←</div><div class="key">↓</div><div class="key">→</div>`;
+            }
+            row5HTML += `</div>`;
+            mainHTML += row5HTML;
+
+            main.innerHTML = mainHTML;
+            
+            // Add click handlers to all keys in main
+            main.querySelectorAll('.key').forEach(key => {
+                key.addEventListener('click', () => {
+                    key.classList.add('clicked');
+                    setTimeout(() => key.classList.remove('clicked'), 150);
+                });
+            });
+            
+            preview.appendChild(main);
+
+            // Block 2: Navigation cluster (Section 2)
+            if (size === 'TKL' || size === 'Full-Size') {
+                const nav = document.createElement('div');
+                nav.className = 'kb-nav';
+                nav.innerHTML = `
+                    <div class="kb-row"><div class="key">Prt</div><div class="key">Scr</div><div class="key">Pse</div></div>
+                    <div class="kb-row"><div class="key">Ins</div><div class="key">Hom</div><div class="key">PgU</div></div>
+                    <div class="kb-row"><div class="key">Del</div><div class="key">End</div><div class="key">PgD</div></div>
+                    <div class="kb-row nav-gap" style="margin-top:16px;justify-content:center"><div class="key">↑</div></div>
+                    <div class="kb-row"><div class="key">←</div><div class="key">↓</div><div class="key">→</div></div>
+                `;
+                nav.querySelectorAll('.key').forEach(key => {
+                    key.addEventListener('click', () => {
+                        key.classList.add('clicked');
+                        setTimeout(() => key.classList.remove('clicked'), 150);
+                    });
+                });
+                preview.appendChild(nav);
+            }
+
+            // Block 3: Numpad (Section 3)
+            if (size === 'Full-Size') {
+                const numpad = document.createElement('div');
+                numpad.className = 'kb-numpad';
+                numpad.style.cssText = 'display:grid;grid-template-columns:repeat(4,38px);grid-auto-rows:38px;gap:5px;';
+                numpad.innerHTML = `
+                    <div class="key">Num</div><div class="key">/</div><div class="key">*</div><div class="key">-</div>
+                    <div class="key">7</div><div class="key">8</div><div class="key">9</div>
+                    <div class="key" style="grid-row:span 2;height:81px;align-self:stretch">+</div>
+                    <div class="key">4</div><div class="key">5</div><div class="key">6</div>
+                    <div class="key">1</div><div class="key">2</div><div class="key">3</div>
+                    <div class="key" style="grid-row:span 2;height:81px;align-self:stretch">En</div>
+                    <div class="key" style="grid-column:span 2;width:81px">0</div><div class="key">.</div>
+                `;
+                numpad.querySelectorAll('.key').forEach(key => {
+                    key.addEventListener('click', () => {
+                        key.classList.add('clicked');
+                        setTimeout(() => key.classList.remove('clicked'), 150);
+                    });
+                });
+                preview.appendChild(numpad);
+            }
+        }
+
+        function openTab(tabName) { 
+            let i, tabcontent, tablinks; 
+            tabcontent = document.getElementsByClassName("tab-content"); 
+            for (i = 0; i < tabcontent.length; i++) tabcontent[i].style.display = "none"; 
+            tablinks = document.getElementsByClassName("tab-btn"); 
+            for (i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active"); 
+            document.getElementById(tabName).style.display = "block"; 
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
+        }
+
+        function setCaseColor(color) { 
+            document.getElementById('keyboard-preview').style.setProperty('--case-color', color); 
+        }
+
+        function updateVisuals() {
+            const preview = document.getElementById('keyboard-preview');
+            
+            // Remove old classes
+            preview.classList.remove('switch-red', 'switch-brown', 'switch-blue');
+            preview.classList.remove('caps-carbon', 'caps-white', 'caps-pink', 'caps-galaxy');
+            
+            // Add current switch class
+            const activeSwitch = document.querySelector('#switches .option-card.active');
+            if (activeSwitch) {
+                preview.classList.add(`switch-${activeSwitch.dataset.switch}`);
+            }
+            
+            // Add current keycap class
+            const activeCaps = document.querySelector('#keycaps .keycap-card.active');
+            if (activeCaps) {
+                preview.classList.add(`caps-${activeCaps.dataset.caps}`);
+            }
+        }
+
+        // Event Listeners Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab Buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => openTab(btn.dataset.tab));
+            });
+
+            // Swatches
+            document.querySelectorAll('.swatch').forEach(swatch => {
+                swatch.addEventListener('click', () => {
+                    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+                    swatch.classList.add('active');
+                    setCaseColor(swatch.dataset.color);
+                });
+            });
+
+            // Size Pills
+            document.querySelectorAll('#size-pills .pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('#size-pills .pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    sizePrice = parseInt(pill.dataset.extra);
+                    renderKeyboard(pill.innerText);
+                    updatePrice();
+                    updateVisuals(); // Re-apply visuals to new keys
+                });
+            });
+
+            // Material Pills
+            document.querySelectorAll('#material-pills .pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('#material-pills .pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    casePrice = parseInt(pill.dataset.extra);
+                    updatePrice();
+                });
+            });
+
+            // Switch Cards
+            document.querySelectorAll('#switches .option-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('#switches .option-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    switchPrice = parseInt(card.dataset.extra);
+                    updatePrice();
+                    updateVisuals();
+                });
+            });
+
+            // Keycap Cards
+            document.querySelectorAll('#keycaps .keycap-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('#keycaps .keycap-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    keycapPrice = parseInt(card.dataset.extra);
+                    updatePrice();
+                    updateVisuals();
+                });
+            });
+
+            // Initial Render
+            renderKeyboard('65%');
+            updatePrice();
+            updateVisuals();
+            
+            // Active Nav Link
+            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-links a').forEach(link => { 
+                if (link.getAttribute('href') === currentPath) link.classList.add('active'); 
+            });
+        });
+    </script>
+</body>
+</html>
