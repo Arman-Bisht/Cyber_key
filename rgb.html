@@ -16,7 +16,7 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         html { scroll-behavior: smooth; background-color: var(--bg); color: var(--white); }
-        body { opacity: 0; animation: fadeIn 0.4s ease forwards; overflow-x: hidden; }
+        body { opacity: 0; animation: fadeIn 0.4s ease forwards; overflow-x: hidden; padding-bottom: 100px; background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.4), rgba(5, 5, 5, 0.7)), url('/images/background_rgb.png'); background-size: cover; background-position: center; background-attachment: fixed; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         nav { position: sticky; top: 0; z-index: 1000; background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; height: 80px; }
@@ -28,7 +28,7 @@
         .nav-links a:hover, .nav-links a.active { color: var(--primary); }
         .nav-cta { background: var(--gradient); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s, opacity 0.2s; }
         .nav-cta:hover { transform: translateY(-2px); opacity: 0.9; }
-        .page-hero { padding: 8rem 5% 4rem; text-align: center; position: relative; }
+        .page-hero { padding: 8rem 5% 4rem; text-align: center; position: relative; border-bottom: 1px solid var(--border); }
         .glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, rgba(0, 163, 108, 0.1) 50%, transparent 100%); z-index: -1; }
         .page-hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; text-transform: uppercase; margin-bottom: 1.5rem; line-height: 1; }
         .page-hero p { color: var(--body-text); max-width: 700px; margin: 0 auto; font-size: 1.2rem; }
@@ -53,7 +53,7 @@
         .rgb-ecosystem { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 6rem 5%; }
         .eco-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--primary); padding: 3rem 2rem; border-radius: 16px; transition: transform 0.3s; }
         .eco-card:nth-child(2) { border-top-color: var(--secondary); }
-        .eco-card:nth-child(3) { border-top-image: var(--gradient); border-top-width: 2px; }
+        .eco-card:nth-child(3) { border-top-color: #00e080; }
         .eco-card:hover { transform: translateY(-10px); }
         .eco-card h3 { margin-bottom: 1rem; font-size: 1.5rem; }
         .eco-card p { color: var(--body-text); line-height: 1.6; }
@@ -80,7 +80,108 @@
         .social-icon { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); text-decoration: none; transition: all 0.2s; }
         .social-icon:hover { border-color: var(--primary); color: var(--primary); }
         .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; text-align: center; color: var(--muted); font-size: 0.8rem; }
-        @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } }
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            transition: border-color 0.2s;
+            line-height: 1;
+        }
+        .menu-toggle:hover { border-color: var(--primary); color: var(--primary); }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 2rem 5%;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            animation: slideDown 0.3s ease;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.5rem 0;
+            transition: color 0.2s;
+        }
+        .mobile-nav a:hover { color: var(--primary); }
+        .mobile-nav .mobile-cta {
+            background: var(--gradient);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive — Tablet */
+        @media (max-width: 1024px) {
+            .keyboard-preview { padding: 25px; max-width: 100%; }
+            .rgb-ecosystem { grid-template-columns: repeat(2, 1fr); padding: 4rem 5%; }
+            .rgb-cta-card { padding: 3rem 2rem; }
+        }
+
+        /* Responsive — Phone */
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta { display: none; }
+            .menu-toggle { display: block; }
+            nav { height: 70px; }
+            .page-hero { padding: 5rem 5% 3rem; }
+            .page-hero h1 { font-size: clamp(1.8rem, 7vw, 3rem); }
+            .page-hero p { font-size: 1rem; }
+            .rgb-demo { padding: 3rem 5%; }
+            .keyboard-preview { padding: 20px; border-radius: 16px; }
+            .key { height: 40px; }
+            .keyboard-row { gap: 5px; margin-bottom: 5px; }
+            .presets { gap: 0.5rem; }
+            .preset-btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
+            .rgb-ecosystem { grid-template-columns: 1fr; padding: 3rem 5%; gap: 1.5rem; }
+            .eco-card { padding: 2rem 1.5rem; }
+            .rgb-cta { padding: 4rem 5%; }
+            .rgb-cta-card { padding: 2.5rem 1.5rem; border-radius: 16px; }
+            .rgb-cta-card h2 { font-size: clamp(1.2rem, 5vw, 2rem); }
+            .rgb-cta-card p { font-size: 0.95rem; }
+            .rgb-stats { gap: 2rem; }
+            .rgb-stat-num { font-size: 1.5rem; }
+            .footer-main { flex-direction: column; gap: 2rem; }
+            .footer-nav { flex-direction: column; gap: 1.5rem; }
+            .footer-social { justify-content: flex-start; }
+        }
+
+        /* Responsive — Small Phone */
+        @media (max-width: 480px) {
+            nav { padding: 1rem 4%; }
+            .logo { font-size: 1.2rem; }
+            .page-hero { padding: 4rem 4% 2rem; }
+            .rgb-demo { padding: 2rem 4%; }
+            .keyboard-preview { padding: 15px; border-radius: 12px; }
+            .key { height: 32px; }
+            .keyboard-row { gap: 4px; margin-bottom: 4px; }
+            .preset-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; border-radius: 8px; }
+            .rgb-ecosystem { padding: 2rem 4%; }
+            .rgb-cta { padding: 3rem 4%; }
+            .rgb-cta-card { padding: 2rem 1rem; }
+            footer { padding: 3rem 4% 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -88,7 +189,15 @@
         <a href="index.html" class="logo"><div class="logo-icon">C</div>CYBER<span>KEYS</span></a>
         <div class="nav-links"><a href="features.html">Features</a><a href="builder.html">Builder</a><a href="rgb.html">RGB</a><a href="community.html">Community</a></div>
         <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
     </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <a href="features.html">Features</a>
+        <a href="builder.html">Builder</a>
+        <a href="rgb.html">RGB</a>
+        <a href="community.html">Community</a>
+        <a href="builder.html" class="mobile-cta">Build Your Keyboard</a>
+    </div>
     <header class="page-hero"><div class="glow"></div><h1>ILLUMINATE YOUR <br><span class="gradient-text">EXPERIENCE</span></h1><p>Per-key RGB with 16.8 million colors. Sync your entire setup with our proprietary software.</p></header>
     <section class="rgb-demo">
         <div class="keyboard-preview" id="keyboard-preview">
@@ -145,6 +254,15 @@
         }
         const currentPath = window.location.pathname.split('/').pop() || 'index.html';
         document.querySelectorAll('.nav-links a').forEach(link => { if (link.getAttribute('href') === currentPath) link.classList.add('active'); });
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        if (menuToggle && mobileNav) {
+            menuToggle.addEventListener('click', () => {
+                mobileNav.classList.toggle('open');
+                menuToggle.textContent = mobileNav.classList.contains('open') ? '✕' : '☰';
+            });
+        }
         setPreset('wave');
     </script>
 </body>

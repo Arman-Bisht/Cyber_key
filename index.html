@@ -137,6 +137,10 @@
             text-align: center;
             padding: 4rem 5%;
             overflow: hidden;
+            background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.1), rgba(5, 5, 5, 0.4)), url('/images/background_image1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
         .starfield {
@@ -620,12 +624,105 @@
             font-size: 0.8rem;
         }
 
-        /* Responsive */
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            transition: border-color 0.2s;
+            line-height: 1;
+        }
+        .menu-toggle:hover { border-color: var(--primary); color: var(--primary); }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 2rem 5%;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            animation: slideDown 0.3s ease;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.5rem 0;
+            transition: color 0.2s;
+        }
+        .mobile-nav a:hover { color: var(--primary); }
+        .mobile-nav .mobile-cta {
+            background: var(--gradient);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive — Tablet (≤1024px) */
+        @media (max-width: 1024px) {
+            section { padding: 5rem 5%; }
+            .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); }
+            .hero p { font-size: 1rem; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-nav { gap: 2.5rem; }
+        }
+
+        /* Responsive — Phone (≤768px) */
         @media (max-width: 768px) {
             .nav-links, .nav-cta { display: none; }
-            .hero h1 { font-size: 3.5rem; }
-            .footer-nav { justify-content: flex-start; gap: 2rem; }
-            .footer-social { justify-content: flex-start; }
+            .menu-toggle { display: block; }
+            nav { height: 70px; }
+            .hero { padding: 3rem 5%; min-height: auto; }
+            .hero h1 { font-size: clamp(2rem, 10vw, 3.5rem); letter-spacing: -1px; }
+            .hero p { font-size: 0.95rem; margin-bottom: 2rem; }
+            .hero-btns { flex-direction: column; gap: 1rem; align-items: center; }
+            .hero-btns a { width: 100%; max-width: 280px; text-align: center; }
+            #scroll-animation-section { height: 200vh; }
+            section { padding: 4rem 5%; }
+            .section-header { margin-bottom: 2.5rem; }
+            .section-header h2 { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+            .features-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .feature-card { padding: 2rem 1.5rem; }
+            .product-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .testimonials-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .testimonial-card { padding: 1.5rem; }
+            .footer-main { flex-direction: column; gap: 2rem; }
+            .footer-nav { flex-direction: column; gap: 1.5rem; justify-content: flex-start; min-width: auto; }
+            .footer-social { justify-content: flex-start; min-width: auto; }
+        }
+
+        /* Responsive — Small Phone (≤480px) */
+        @media (max-width: 480px) {
+            nav { padding: 1rem 4%; }
+            .logo { font-size: 1.2rem; }
+            .hero { padding: 2rem 4%; }
+            .hero h1 { font-size: 2rem; }
+            section { padding: 3rem 4%; }
+            .product-card { padding: 1.5rem; }
+            .product-card h3 { font-size: 1.2rem; }
+            .price { font-size: 1rem; }
+            footer { padding: 3rem 4% 1.5rem; }
         }
     </style>
 </head>
@@ -643,7 +740,15 @@
             <a href="community.html">Community</a>
         </div>
         <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
     </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <a href="features.html">Features</a>
+        <a href="builder.html">Builder</a>
+        <a href="rgb.html">RGB</a>
+        <a href="community.html">Community</a>
+        <a href="builder.html" class="mobile-cta">Build Your Keyboard</a>
+    </div>
 
     <header class="hero">
         <div class="starfield" id="starfield"></div>
@@ -719,21 +824,21 @@
                 <div class="product-img"><img src="/images/neon_night.png" alt="CyberKeys PRO keyboard"></div>
                 <h3>CyberKeys PRO</h3>
                 <p class="price">$249.00</p>
-                <a href="builder.html" class="buy-btn">Buy Now →</a>
+                <a href="#" class="buy-btn" onclick="alert('Out of Stock!'); return false;">Buy Now →</a>
             </div>
             <div class="product-card">
                 <div class="badge badge-primary" style="border-color: var(--muted); color: var(--muted);">Compact</div>
                 <div class="product-img"><img src="/images/artic_minimal.png" alt="CyberKeys LITE keyboard"></div>
                 <h3>CyberKeys LITE</h3>
                 <p class="price">$149.00</p>
-                <a href="builder.html" class="buy-btn">Buy Now →</a>
+                <a href="#" class="buy-btn" onclick="alert('Out of Stock!'); return false;">Buy Now →</a>
             </div>
             <div class="product-card">
                 <div class="badge badge-secondary">Premium</div>
                 <div class="product-img"><img src="/images/deep_space.png" alt="CyberKeys ELITE keyboard"></div>
                 <h3>CyberKeys ELITE</h3>
                 <p class="price">$349.00</p>
-                <a href="builder.html" class="buy-btn">Buy Now →</a>
+                <a href="#" class="buy-btn" onclick="alert('Out of Stock!'); return false;">Buy Now →</a>
             </div>
         </div>
         <div style="text-align: center;">
@@ -852,6 +957,16 @@
                 link.classList.add('active');
             }
         });
+
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        if (menuToggle && mobileNav) {
+            menuToggle.addEventListener('click', () => {
+                mobileNav.classList.toggle('open');
+                menuToggle.textContent = mobileNav.classList.contains('open') ? '✕' : '☰';
+            });
+        }
 
         // ====== SCROLL-DRIVEN FRAME ANIMATION + PLAY ON SCROLL ======
         const videoSection = document.getElementById('scroll-animation-section');

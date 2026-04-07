@@ -67,7 +67,100 @@
         .social-icon { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); text-decoration: none; transition: all 0.2s; }
         .social-icon:hover { border-color: var(--primary); color: var(--primary); }
         .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; text-align: center; color: var(--muted); font-size: 0.8rem; }
-        @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .news-form { flex-direction: column; } }
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            transition: border-color 0.2s;
+            line-height: 1;
+        }
+        .menu-toggle:hover { border-color: var(--primary); color: var(--primary); }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 2rem 5%;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            animation: slideDown 0.3s ease;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.5rem 0;
+            transition: color 0.2s;
+        }
+        .mobile-nav a:hover { color: var(--primary); }
+        .mobile-nav .mobile-cta {
+            background: var(--gradient);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive — Tablet */
+        @media (max-width: 1024px) {
+            .testimonials-grid { grid-template-columns: repeat(2, 1fr); padding: 4rem 5%; }
+            .showcase { padding: 4rem 5%; }
+            .showcase-grid { grid-template-columns: repeat(2, 1fr); }
+            .discord-cta { padding: 3rem 2rem; margin: 4rem 5%; }
+        }
+
+        /* Responsive — Phone */
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta { display: none; }
+            .menu-toggle { display: block; }
+            nav { height: 70px; }
+            .page-hero { padding: 5rem 5% 3rem; }
+            .page-hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
+            .stats { gap: 2rem; }
+            .stat-num { font-size: 2rem; }
+            .testimonials-grid { grid-template-columns: 1fr; padding: 3rem 5%; }
+            .showcase { padding: 3rem 5%; }
+            .showcase-grid { grid-template-columns: 1fr; }
+            .discord-cta { padding: 2.5rem 1.5rem; margin: 3rem 5%; }
+            .discord-cta h2 { font-size: 1.8rem; }
+            .newsletter { padding: 4rem 5%; }
+            .news-form { flex-direction: column; }
+            .news-form button { padding: 1rem; }
+            .footer-main { flex-direction: column; gap: 2rem; }
+            .footer-nav { flex-direction: column; gap: 1.5rem; justify-content: flex-start; }
+            .footer-social { justify-content: flex-start; }
+        }
+
+        /* Responsive — Small Phone */
+        @media (max-width: 480px) {
+            nav { padding: 1rem 4%; }
+            .logo { font-size: 1.2rem; }
+            .page-hero { padding: 4rem 4% 2rem; }
+            .stats { gap: 1rem; flex-direction: column; }
+            .stat-num { font-size: 1.8rem; }
+            .discord-cta { padding: 2rem 1rem; margin: 3rem 4%; }
+            .discord-cta h2 { font-size: 1.5rem; }
+            footer { padding: 3rem 4% 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -75,7 +168,15 @@
         <a href="index.html" class="logo"><div class="logo-icon">C</div>CYBER<span>KEYS</span></a>
         <div class="nav-links"><a href="features.html">Features</a><a href="builder.html">Builder</a><a href="rgb.html">RGB</a><a href="community.html">Community</a></div>
         <a href="builder.html" class="nav-cta">Build Your Keyboard</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
     </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <a href="features.html">Features</a>
+        <a href="builder.html">Builder</a>
+        <a href="rgb.html">RGB</a>
+        <a href="community.html">Community</a>
+        <a href="builder.html" class="mobile-cta">Build Your Keyboard</a>
+    </div>
     <header class="page-hero"><h1>JOIN THE <span class="gradient-text">ELITE</span></h1><p>Connect with 50,000+ keyboard enthusiasts, share your builds, and get exclusive early access.</p>
         <div class="stats"><div class="stat-item"><span class="stat-num">50K+</span><span class="stat-label">Members</span></div><div class="stat-item"><span class="stat-num">12K+</span><span class="stat-label">Builds Shared</span></div><div class="stat-item"><span class="stat-num">4.9★</span><span class="stat-label">Rating</span></div></div>
     </header>
@@ -110,6 +211,16 @@
         console.log("CyberKeys — The Future of Typing");
         const currentPath = window.location.pathname.split('/').pop() || 'index.html';
         document.querySelectorAll('.nav-links a').forEach(link => { if (link.getAttribute('href') === currentPath) link.classList.add('active'); });
+
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        if (menuToggle && mobileNav) {
+            menuToggle.addEventListener('click', () => {
+                mobileNav.classList.toggle('open');
+                menuToggle.textContent = mobileNav.classList.contains('open') ? '✕' : '☰';
+            });
+        }
     </script>
 </body>
 </html>
